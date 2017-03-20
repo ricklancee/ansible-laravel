@@ -1,0 +1,10 @@
+[program:laravel-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php /var/www/{{ domain }}/artisan queue:work --sleep=3 --tries=3
+autostart=true
+autorestart=true
+user=deploy
+numprocs=3
+redirect_stderr=true
+stdout_logfile=/var/www/{{ domain }}/worker.log
+stderr_logfile=/var/www/{{ domain }}/worker.error.log

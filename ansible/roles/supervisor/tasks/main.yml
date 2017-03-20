@@ -1,0 +1,12 @@
+---
+- name: Install supervisor
+  apt: pkg=supervisor state=present
+
+- name: Enable supervisor
+  service: name=supervisor state=started
+
+- name: Copy config
+  template: src=laravel-worker.conf.j2 dest=/etc/supervisor/conf.d/laravel-worker.conf
+
+# We don't reread and update supervisor because the laravel application does not exist yet
+# Reading and updating supervisor should be done on deploy

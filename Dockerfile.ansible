@@ -1,0 +1,22 @@
+FROM ubuntu:16.04
+
+# Install dependencies
+RUN apt-get update && apt-get install -y software-properties-common python-software-properties nano whois rsync \
+  # install python
+  python python-dev python-pip python-virtualenv && \
+  rm -rf /var/lib/apt/lists/* && \
+  # Add ansible ppa and install
+  add-apt-repository -y ppa:ansible/ansible && \
+  apt-get update && \
+  apt-get install -y ansible && \
+  # Remove default files because we will mount a directory for them
+  rm /etc/ansible/hosts && \
+  rm -rf /etc/ansible/roles && \
+  rm /etc/ansible/ansible.cfg && \
+  # create a ssh key for ansible to use
+  ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N "" && \
+  cat ~/.ssh/id_rsa.pub && \
+  export EDITOR=nano
+
+WORKDIR /etc/ansible
+

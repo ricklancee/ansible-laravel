@@ -1,0 +1,3 @@
+---
+# YOU SHOULD SET THIS PASSWORD AND ENCRYPT IT WITH ANSIBLE VAULT
+mysql_root_pass: secret

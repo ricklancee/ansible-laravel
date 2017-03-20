@@ -1,0 +1,6 @@
+---
+# YOU SHOULD SET THESE PASSWORDS AND KEYS AND ENCRYPT THEM
+# WITH ANSIBLE VAULT
+admin_password: secret
+deploy_password: secret
+shared_public_key: secret

@@ -1,0 +1,17 @@
+---
+- hosts: web
+  become: true
+  become_user: root
+  become_method: sudo
+  vars:
+    - domain: #Your site domain
+    - admin_email: # Your server admins mail (used by fail2ban and certbot)
+  roles:
+    - upgrades
+    - firewall
+    - users
+    - certbot
+    - nginx
+    - laravel-requirements
+    - mysql
+    - supervisor

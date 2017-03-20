@@ -1,0 +1,11 @@
+---
+- name: Restart php7.1-fpm
+  service: name=php7.1-fpm state=restarted
+
+- name: Check if Nginx exists
+  stat: path=/etc/init.d/nginx
+  register: nginx_status
+
+- name: Restart nginx
+  service: name=nginx state=restarted
+  when: nginx_status.stat.exists

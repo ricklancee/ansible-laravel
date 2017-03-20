@@ -1,0 +1,52 @@
+---
+- name: Set MySQL root password before installing
+  debconf: name='mysql-server' question='mysql-server/root_password' value='{{ mysql_root_pass | quote}}' vtype='password'
+- name: Confirm MySQL root password before installing
+  debconf: name='mysql-server' question='mysql-server/root_password_again' value='{{ mysql_root_pass | quote}}' vtype='password'
+
+- name: Install MySQL
+  apt: pkg={{ item }} state=present
+  with_items:
+    - python-mysqldb
+    - mysql-server
+
+- name: Start MySQL
+  service: name=mysql state=started
+
+- name: Set root Password
+  mysql_user: name=root host={{ item }} password={{ mysql_root_pass }} login_user=root login_password={{ mysql_root_pass }} state=present
+  with_items:
+    - localhost
+    - 127.0.0.1
+    - ::1
+
+- name: Reload privilege tables
+  command: 'mysql -u root --password="{{ mysql_root_pass }}" -ne "{{ item }}"'
+  with_items:
+    - FLUSH PRIVILEGES
+  changed_when: False
+
+- name: Remove anonymous users
+  command: 'mysql -u root --password="{{ mysql_root_pass }}" -ne "{{ item }}"'
+  with_items:
+    - DELETE FROM mysql.user WHERE User=''
+  changed_when: False
+
+- name: Disallow root login remotely
+  command: 'mysql -u root --password="{{ mysql_root_pass }}" -ne "{{ item }}"'
+  with_items:
+    - DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')
+  changed_when: False
+
+- name: Remove test database and access to it
+  command: 'mysql -u root --password="{{ mysql_root_pass }}" -ne "{{ item }}"'
+  with_items:
+    - DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'
+  changed_when: False
+  ignore_errors: True
+
+- name: Reload privilege tables
+  command: 'mysql -u root --password="{{ mysql_root_pass }}" -ne "{{ item }}"'
+  with_items:
+    - FLUSH PRIVILEGES
+  changed_when: False

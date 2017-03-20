@@ -1,0 +1,28 @@
+---
+- name: Add the ppa for php 7.1
+  apt_repository: repo='ppa:ondrej/php' state=present
+
+- name: Install php 7.1
+  apt: pkg=php7.1 state=present
+
+- name: Install extention php-mbstring
+  apt: pkg=php7.1-mbstring state=present
+
+- name: Install extention php-xml
+  apt: pkg=php7.1-xml state=present
+
+- name: Install extention php-fpm
+  apt: pkg=php7.1-fpm state=present
+
+- name: Install extention php-mysql
+  apt: pkg=php7.1-mysql state=present
+
+- name: Install extention php-curl
+  apt: pkg=php7.1-curl state=present
+
+- name: ensure php7.1-fpm cgi.fix_pathinfo=0
+  lineinfile: dest=/etc/php/7.1/fpm/php.ini regexp='^(.*)cgi.fix_pathinfo=' line=cgi.fix_pathinfo=0
+  notify:
+    - Restart php7.1-fpm
+    - Check if Nginx exists
+    - Restart nginx

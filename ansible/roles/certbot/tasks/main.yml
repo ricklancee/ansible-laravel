@@ -1,0 +1,14 @@
+---
+- name: Get certbot
+  get_url:
+    url: https://dl.eff.org/certbot-auto
+    dest: /opt/certbot-auto
+    mode: a+x
+
+# Ouputs a cert to /etc/letsencrypt/live/{{ domain }}
+# For some reason we need to run export LC_ALL="C" before running certbot to prevent a python issue
+- name: Get SSL certificate for the domain
+  shell: export LC_ALL="C" && /opt/certbot-auto certonly --webroot -w "/var/www/{{ domain }}" -d "{{ domain }}" --non-interactive --agree-tos --email "{{ admin_email }}"
+
+- name: Add bashscript to cron.monthly to run certbot renew
+  template: src=letsencrypt.j2 dest=/etc/cron.monthly/letsencrypt mode=a+x

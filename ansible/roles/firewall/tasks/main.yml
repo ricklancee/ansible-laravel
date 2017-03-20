@@ -1,0 +1,6 @@
+---
+# Install ufw (simple iptables)
+- include: ufw.yml
+
+# Install fail 2 ban
+- include: fail2ban.yml
