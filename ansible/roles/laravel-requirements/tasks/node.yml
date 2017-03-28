@@ -1,0 +1,19 @@
+---
+- name: Check if node is installed
+  stat: path=/usr/bin/node
+  register: node_status
+
+- name: Download node source setup
+  get_url:
+    url: https://deb.nodesource.com/setup_7.x
+    dest: /tmp/node-source-setup
+    mode: 0755
+  when: not node_status.stat.exists
+
+- name: Run node installer
+  command: ./node-source-setup chdir=/tmp
+  when: not node_status.stat.exists
+
+- name: Install nodejs package
+  apt: pkg=nodejs state=present
+  when: not node_status.stat.exists

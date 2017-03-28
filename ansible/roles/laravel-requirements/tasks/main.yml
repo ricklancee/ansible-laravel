@@ -1,3 +1,5 @@
 ---
 - include: php.yml
 - include: composer.yml
+- include: node.yml
+- include: yarn.yml

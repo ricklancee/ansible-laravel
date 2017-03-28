@@ -1,0 +1,30 @@
+---
+- name: Check if yarn is installed
+  stat: path=/usr/bin/yarn
+  register: yarn_status
+
+- name: Add yarn gpg
+  apt_key:
+    url: "https://dl.yarnpkg.com/debian/pubkey.gpg"
+    state: present
+  when: not yarn_status.stat.exists
+
+- name: Ensure sources list file exists
+  file:
+    path: /etc/apt/sources.list.d/yarn.list
+    owner: root
+    mode: 0644
+    state: touch
+  when: not yarn_status.stat.exists
+
+- name: Ensure package is in sources list
+  lineinfile:
+    dest: /etc/apt/sources.list.d/yarn.list
+    regexp: 'deb http://dl.yarnpkg.com/debian/ stable main'
+    line: 'deb http://dl.yarnpkg.com/debian/ stable main'
+    state: present
+  when: not yarn_status.stat.exists
+
+- name: Install yarn
+  apt: pkg=yarn update_cache=yes
+  when: not yarn_status.stat.exists
