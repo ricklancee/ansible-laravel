@@ -4,7 +4,7 @@
 
 This runs ansible inside a docker container so that you can provision
 your servers easily. You only need docker, a server to ssh into
-and a domain name (required for ssl certifcates).
+and a domain name (required for ssl certifcates). The setup here is loosly based on the excellent tutorials on [serversforhackers.com](https://serversforhackers.com/)
 
 This setup is for ubuntu servers; specifically ubuntu 16.04.
 
